@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Peluquería - Reserva de Turnos</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Reserva de Turnos en Peluquería</h1>
+    </header>
+    <main>
+        <section class="container">
+            <h2>Calendario de Turnos</h2>
+            <div class="calendar">
+                <!-- Aquí puedes integrar un calendario interactivo o simplemente una lista de turnos -->
+                <ul>
+                    {% for turno in turnos %}
+                        <li>{{ turno.cliente }} - {{ turno.servicio }} el {{ turno.fecha }} a las {{ turno.hora }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <a href="{% url 'crear_turno' %}" class="btn">Crear Nuevo Turno</a>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2024 Peluquería</p>
+    </footer>
+</body>
+</html>
