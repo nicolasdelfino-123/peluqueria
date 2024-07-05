@@ -1,122 +1,31 @@
-<!-- index.html -->
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Horarios de la Peluquería</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Carga de etiquetas de plantilla estática -->
-    {% load static %}
-    <!-- Aquí se usa la ruta estática para style.css -->
-    <link rel="stylesheet" href="{% static 'app_horarios/style.css' %}">
-    <!-- Flatpickr CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <title>Peluquería - Reserva de Turnos</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand" href="#">Peluquería Iván Belotti</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" href="#">Inicio</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Reservar Turno</a>
-                </li>
-            </ul>
-        </div>
-    </nav>
-    <div class="container mt-5">
-        <form method="POST" id="horariosForm">
-            {% csrf_token %}
-            <input id="datepicker" type="text" class="form-control" name="fecha_seleccionada" placeholder="Selecciona una fecha" {% if fecha_seleccionada %}value="{{ fecha_seleccionada }}"{% endif %}>
-            <input type="hidden" name="turno_periodo" id="turno_periodo" value="manana"> <!-- Valor por defecto "mañana" -->
-            <button type="submit" class="btn btn-primary mt-3" id="mostrarHorariosBtn">Mostrar Horarios</button>
-        </form>
-        
-        <!-- Mostrar horarios -->
-        <div id="horariosContainer">
-            {% if turnos %}
-                <h2 class="mt-4">Horarios Disponibles para el día seleccionado:</h2>
-                <div class="row mt-3">
+    <header>
+        <h1>Reserva de Turnos en Peluquería</h1>
+    </header>
+    <main>
+        <section class="container">
+            <h2>Calendario de Turnos</h2>
+            <div class="calendar">
+                <!-- Aquí puedes integrar un calendario interactivo o simplemente una lista de turnos -->
+                <ul>
                     {% for turno in turnos %}
-                    <div class="col-12 col-md-4 mb-3">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title">{{ turno.hora_inicio }} - {{ turno.hora_fin }}</h5>
-                                <p class="card-text">Descripción del turno si es necesario.</p>
-                                <input type="radio" id="turno{{ turno.hora_inicio }}" name="turno" value="{{ turno.hora_inicio }}">
-                                <label for="turno{{ turno.hora_inicio }}" class="ml-2">Seleccionar</label>
-                            </div>
-                        </div>
-                    </div>
+                        <li>{{ turno.cliente }} - {{ turno.servicio }} el {{ turno.fecha }} a las {{ turno.hora }}</li>
                     {% endfor %}
-                </div>
-                <button type="submit" class="btn btn-primary mt-3">Confirmar Turno</button>
-            {% else %}
-                <p class="mt-4">No hay horarios disponibles para la fecha seleccionada.</p>
-            {% endif %}
-        </div>
-    </div>
-
-    <!-- Footer -->
-    <footer class="footer bg-dark text-white mt-5 py-4">
-        <div class="container text-center">
-            <div class="row">
-                <div class="col-md-4">
-                    <a href="https://www.instagram.com" target="_blank" class="text-white">
-                        <img src="https://img.icons8.com/fluent/48/000000/instagram-new.png" alt="Instagram" width="24">
-                    </a>
-                </div>
-                <div class="col-md-4">
-                    <a href="https://www.facebook.com" target="_blank" class="text-white">
-                        <img src="https://img.icons8.com/fluent/48/000000/facebook-new.png" alt="Facebook" width="24">
-                    </a>
-                </div>
-                <div class="col-md-4">
-                    <p class="mb-0">&copy; 2024 Peluquería Ivan Belotti. Todos los derechos reservados.</p>
-                </div>
+                </ul>
             </div>
-        </div>
+            <a href="{% url 'crear_turno' %}" class="btn">Crear Nuevo Turno</a>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2024 Peluquería</p>
     </footer>
-
-    <!-- jQuery y Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <!-- Flatpickr JS -->
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <!-- Flatpickr Initialization -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const datePicker = flatpickr('#datepicker', {
-                locale: 'es',  // Configura el idioma español
-                dateFormat: 'd-m-Y',  // Formato de la fecha
-                disableMobile: true,  // Deshabilita la interfaz móvil por defecto
-                minDate: 'today'  // Establece la fecha mínima seleccionable como hoy
-            });
-
-            const mostrarHorariosBtn = document.getElementById('mostrarHorariosBtn');
-            const horariosContainer = document.getElementById('horariosContainer');
-
-            // Limpia los horarios cuando se cambia la fecha
-            datePicker.config.onChange.push(function(selectedDates, dateStr, instance) {
-                horariosContainer.innerHTML = '';
-            });
-
-            // Muestra los horarios solo cuando se hace clic en el botón
-            mostrarHorariosBtn.addEventListener('click', function(event) {
-                if (datePicker.selectedDates.length === 0) {
-                    event.preventDefault();
-                    horariosContainer.innerHTML = '<p class="mt-4">Por favor selecciona una fecha primero.</p>';
-                }
-            });
-        });
-    </script>
 </body>
 </html>
