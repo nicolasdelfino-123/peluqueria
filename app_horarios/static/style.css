@@ -1,58 +1,71 @@
-/* styles.css */
+/* style.css */
+
+/* Reset y estilos generales */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
 body {
     font-family: Arial, sans-serif;
-    background-color: #f0f0f0;
-    margin: 0;
-    padding: 0;
-}
-
-header {
-    background-color: #333;
-    color: #fff;
-    padding: 10px 20px;
-    text-align: center;
-}
-
-header h1 {
-    margin: 0;
-}
-
-main {
-    padding: 20px;
+    background-color: #f8f9fa;
 }
 
 .container {
-    max-width: 800px;
+    max-width: 1200px;
     margin: 0 auto;
+    padding: 20px;
 }
 
-.calendar {
-    background-color: #fff;
-    border: 1px solid #ccc;
-    padding: 10px;
-    margin-bottom: 20px;
+/* Navbar */
+.navbar {
+    background-color: #343a40;
 }
 
-ul {
-    list-style-type: none;
-    padding: 0;
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: bold;
 }
 
-ul li {
-    margin-bottom: 10px;
+.navbar-nav {
+    margin-left: auto;
 }
 
-.btn {
-    display: inline-block;
-    background-color: #333;
-    color: #fff;
-    text-decoration: none;
+.nav-item {
+    margin-left: 10px;
+}
+
+.nav-link {
+    color: #ffffff;
+}
+
+.nav-link:hover {
+    color: #cccccc;
+}
+
+/* Calendario */
+#calendar {
+    margin-top: 20px;
+}
+
+/* Botón Reservar Turno */
+.btn-reservar {
+    background-color: #007bff;
+    color: #ffffff;
+    border: none;
     padding: 10px 20px;
-    border-radius: 5px;
-    margin-top: 10px;
+    font-size: 1rem;
+    cursor: pointer;
 }
 
-.btn:hover {
-    background-color: #555;
+.btn-reservar:hover {
+    background-color: #0056b3;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .navbar-nav {
+        margin-left: 0;
+    }
 }

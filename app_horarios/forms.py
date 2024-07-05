@@ -7,11 +7,7 @@ class TurnoForm(forms.ModelForm):
         model = Turno
         fields = ['cliente', 'fecha', 'hora', 'servicio']
 
-class TurnoEditForm(forms.ModelForm):
-    class Meta:
-        model = Turno
-        fields = ['cliente', 'fecha', 'hora', 'servicio']
-
     def __init__(self, *args, **kwargs):
-        super(TurnoEditForm, self).__init__(*args, **kwargs)
-        self.fields['cliente'].widget.attrs['readonly'] = True  # Ejemplo de campo solo lectura
+        super(TurnoForm, self).__init__(*args, **kwargs)
+        self.fields['fecha'].widget.attrs['class'] = 'form-control'  # Añadir clases de Bootstrap u otras clases CSS necesarias
+        self.fields['hora'].widget.attrs['class'] = 'form-control'   # Añadir clases de Bootstrap u otras clases CSS necesarias
