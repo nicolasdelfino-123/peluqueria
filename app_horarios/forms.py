@@ -1,17 +1,14 @@
-# app_horarios/forms.py
 from django import forms
 from .models import Turno
 
 class TurnoForm(forms.ModelForm):
     class Meta:
         model = Turno
-        fields = ['cliente', 'fecha', 'hora', 'servicio']
+        fields = ['nombre_cliente', 'apellido_cliente', 'telefono_cliente']
 
-class TurnoEditForm(forms.ModelForm):
+class ReservaForm(forms.ModelForm):
     class Meta:
         model = Turno
-        fields = ['cliente', 'fecha', 'hora', 'servicio']
+        fields = ['nombre_cliente', 'apellido_cliente', 'telefono_cliente']
 
-    def __init__(self, *args, **kwargs):
-        super(TurnoEditForm, self).__init__(*args, **kwargs)
-        self.fields['cliente'].widget.attrs['readonly'] = True  # Ejemplo de campo solo lectura
+

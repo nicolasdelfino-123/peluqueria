@@ -1,4 +1,3 @@
-<!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -32,34 +31,71 @@
         </div>
     </nav>
     <div class="container mt-5">
+        <!-- Formulario para seleccionar fecha y periodo del turno -->
         <form method="POST" id="horariosForm">
             {% csrf_token %}
             <input id="datepicker" type="text" class="form-control" name="fecha_seleccionada" placeholder="Selecciona una fecha" {% if fecha_seleccionada %}value="{{ fecha_seleccionada }}"{% endif %}>
-            <input type="hidden" name="turno_periodo" id="turno_periodo" value="manana"> <!-- Valor por defecto "mañana" -->
-            <button type="submit" class="btn btn-primary mt-3" id="mostrarHorariosBtn">Mostrar Horarios</button>
+            <div class="form-group mt-3">
+                <select name="turno_periodo" id="turno_periodo" class="form-control">
+                    <option value="manana">Mañana</option>
+                    <option value="tarde">Tarde</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary mt-3" id="mostrarHorariosBtn">Mostrar Horarios</button>
+            </div>
         </form>
-        
-        <!-- Mostrar horarios -->
-        <div id="horariosContainer">
-            {% if turnos %}
-                <h2 class="mt-4">Horarios Disponibles para el día seleccionado:</h2>
+
+        <!-- Mostrar mensajes de error o éxito -->
+        {% if mensaje_error %}
+            <div class="alert alert-warning mt-3" role="alert">
+                {{ mensaje_error }}
+            </div>
+        {% endif %}
+        {% if mensaje_exito %}
+            <div class="alert alert-success mt-3" role="alert">
+                {{ mensaje_exito }}
+            </div>
+            <!-- Script para enviar mensaje de WhatsApp al número proporcionado -->
+            <script>
+                const telefonoDestino = '+543534793366';  // Número de teléfono de destino para el mensaje de WhatsApp
+                const mensaje = encodeURIComponent('Su reserva de turno ha sido confirmada en Peluquería Iván Belotti.');  // Mensaje codificado para ser enviado
+
+                const url = `https://api.whatsapp.com/send?phone=${telefonoDestino}&text=${mensaje}`;
+
+                // Redirige automáticamente al usuario al enlace de WhatsApp
+                window.location.href = url;
+            </script>
+        {% endif %}
+
+        <!-- Mostrar horarios o formulario de reserva -->
+        <div id="horariosContainer" class="mt-4">
+            {% if reserva_form %}
+                <h2>Reservar Turno</h2>
+                <form method="POST">
+                    {% csrf_token %}
+                    {{ reserva_form.as_p }}
+                    <input type="hidden" name="turno_id" value="{{ turnos.0.id }}">
+                    <button type="submit" class="btn btn-primary">Confirmar Reserva</button>
+                </form>
+            {% elif turnos %}
+                <h2>Horarios Disponibles para el día seleccionado:</h2>
                 <div class="row mt-3">
                     {% for turno in turnos %}
                     <div class="col-12 col-md-4 mb-3">
                         <div class="card">
                             <div class="card-body">
-                                <h5 class="card-title">{{ turno.hora_inicio }} - {{ turno.hora_fin }}</h5>
-                                <p class="card-text">Descripción del turno si es necesario.</p>
-                                <input type="radio" id="turno{{ turno.hora_inicio }}" name="turno" value="{{ turno.hora_inicio }}">
-                                <label for="turno{{ turno.hora_inicio }}" class="ml-2">Seleccionar</label>
+                                <h5 class="card-title">{{ turno.hora|time:"H:i" }}</h5>
+                                <form method="POST">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="turno_id" value="{{ turno.id }}">
+                                    <button type="submit" class="btn btn-primary">Seleccionar</button>
+                                </form>
                             </div>
                         </div>
                     </div>
                     {% endfor %}
                 </div>
-                <button type="submit" class="btn btn-primary mt-3">Confirmar Turno</button>
-            {% else %}
-                <p class="mt-4">No hay horarios disponibles para la fecha seleccionada.</p>
             {% endif %}
         </div>
     </div>
@@ -95,10 +131,10 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const datePicker = flatpickr('#datepicker', {
-                locale: 'es',  // Configura el idioma español
-                dateFormat: 'd-m-Y',  // Formato de la fecha
-                disableMobile: true,  // Deshabilita la interfaz móvil por defecto
-                minDate: 'today'  // Establece la fecha mínima seleccionable como hoy
+                locale: 'es',
+                dateFormat: 'd-m-Y',
+                disableMobile: true,
+                minDate: 'today'
             });
 
             const mostrarHorariosBtn = document.getElementById('mostrarHorariosBtn');
@@ -107,14 +143,6 @@
             // Limpia los horarios cuando se cambia la fecha
             datePicker.config.onChange.push(function(selectedDates, dateStr, instance) {
                 horariosContainer.innerHTML = '';
-            });
-
-            // Muestra los horarios solo cuando se hace clic en el botón
-            mostrarHorariosBtn.addEventListener('click', function(event) {
-                if (datePicker.selectedDates.length === 0) {
-                    event.preventDefault();
-                    horariosContainer.innerHTML = '<p class="mt-4">Por favor selecciona una fecha primero.</p>';
-                }
             });
         });
     </script>
