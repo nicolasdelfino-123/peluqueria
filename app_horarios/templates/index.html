@@ -22,6 +22,15 @@
             background-position: center;
         }
     </style>
+
+    <style>
+        .card:hover {
+            transform: scale(1.02);
+        }
+    </style>
+
+   
+
 </head>
 <body class="d-flex flex-column h-100">
     <header>
@@ -82,10 +91,21 @@
             <!-- Mostrar horarios o formulario de reserva -->
             <div id="horariosContainer" class="mt-4">
                 {% if reserva_form %}
-                    <h2>Reservar Turno</h2>
+                    <h2 style="color: white; font-weight: bold;">Reservar Turno</h2>
                     <form method="POST">
                         {% csrf_token %}
-                        {{ reserva_form.as_p }}
+
+                        
+
+                       
+                        <style>
+                            /* Estilos para etiquetas de formulario */
+                            .form-label {
+                                color: white !important;
+                                font-weight: bold;
+                            }
+                        </style>
+                             {{ reserva_form.as_p }}
                         <input type="hidden" name="turno_id" value="{{ turnos.0.id }}">
                         <button type="submit" class="btn btn-primary">Confirmar Reserva</button>
                     </form>
@@ -94,7 +114,7 @@
                     <div class="row mt-3">
                         {% for turno in turnos %}
                         <div class="col-12 col-md-4 mb-3">
-                            <div class="card">
+                            <div class="card" style="background-color: rgba(255, 255, 255, 0.8); padding: 15px; margin-bottom: 15px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); backdrop-filter: blur(5px);">
                                 <div class="card-body">
                                     <h5 class="card-title">{{ turno.hora|time:"H:i" }}</h5>
                                     <form method="POST">

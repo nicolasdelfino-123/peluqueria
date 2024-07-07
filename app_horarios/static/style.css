@@ -1,3 +1,5 @@
+/* Estilos grales de body y html */
+
 html, body {
     height: 100%;
 }
@@ -16,6 +18,8 @@ body {
     background-position: center;
 }
 
+/* Estilos de header */
+
 header {
     background-color: #333;
     color: #fff;
@@ -26,6 +30,8 @@ header {
 header h1 {
     margin: 0;
 }
+
+/*Estilos del Main y Contenedores Generales:*/
 
 main {
     flex: 1 0 auto;
@@ -38,6 +44,8 @@ main {
     max-width: 800px;
     margin: 0 auto;
 }
+
+/*Estilos de la Clase .calendar y Listas:*/
 
 .calendar {
     background-color: #fff;
@@ -54,6 +62,8 @@ ul {
 ul li {
     margin-bottom: 10px;
 }
+
+/*Estilos para Encabezados de Horarios Disponibles y Botones:*/
 
 .available-times-heading {
     color: white;
@@ -83,4 +93,17 @@ ul li {
 
 #horariosContainer {
     margin-bottom: 20px;
+}
+
+.card {
+    background-color: rgba(255, 255, 255, 0.8); /* Fondo semi-transparente */
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Sombra suave */
+    backdrop-filter: blur(5px); /* Filtro de desenfoque para un efecto borroso */
+}
+
+.card:hover {
+    transform: scale(1.02); /* Efecto de escala al hacer hover */
 }
