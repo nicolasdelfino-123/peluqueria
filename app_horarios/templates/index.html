@@ -28,7 +28,24 @@
             transform: scale(1.02);
         }
     </style>
+    <style>
+        .available-times-heading {
+        text-align: center; /* Centrar el texto */
+        color: white; /* Color del texto */
+    }
 
+    </style>
+    <style>
+        .available-times-heading {
+    color: white;
+  
+}
+
+    .available-times-heading strong {
+        font-weight: bold;
+}
+    </style>
+   
    
 
 </head>
@@ -106,11 +123,11 @@
                             }
                         </style>
                              {{ reserva_form.as_p }}
-                        <input type="hidden" name="turno_id" value="{{ turnos.0.id }}">
-                        <button type="submit" class="btn btn-primary">Confirmar Reserva</button>
+                             <input type="hidden" name="turno_id" value="{{ reserva_form.instance.id }}">
+                             <button type="submit" class="btn btn-primary">Confirmar Reserva</button>
                     </form>
                 {% elif turnos %}
-                <h2 class="available-times-heading" style="color: white;">Horarios Disponibles para el día seleccionado:</h2>
+                <h2 class="available-times-heading"><strong>Horarios Disponibles para el día seleccionado:</strong></h2>
                     <div class="row mt-3">
                         {% for turno in turnos %}
                         <div class="col-12 col-md-4 mb-3">

@@ -1,9 +1,9 @@
 from django.shortcuts import render, redirect
 from .models import Turno
 from .forms import TurnoForm, ReservaForm
-from django.db.models import Q
 from datetime import datetime, time
 from twilio.rest import Client
+from django.http import HttpResponseServerError
 
 def index(request):
     turnos = []
@@ -62,18 +62,32 @@ def index(request):
                 mensaje_error = "Por favor, seleccione una fecha."
         elif 'turno_id' in request.POST:
             turno_id = request.POST.get('turno_id')
-            turno = Turno.objects.get(id=turno_id)
-            reserva_form = ReservaForm(instance=turno)
+            if turno_id:
+                try:
+                    turno = Turno.objects.get(id=turno_id)
+                    reserva_form = ReservaForm(instance=turno)
+                except Turno.DoesNotExist:
+                    mensaje_error = "El turno seleccionado no existe."
+            else:
+                mensaje_error = "No se proporcionó un ID de turno válido."
         elif 'confirmar_reserva' in request.POST:
             turno_id = request.POST.get('turno_id')
-            turno = Turno.objects.get(id=turno_id)
-            turno.disponible = False
-            turno.save()
-            enviar_mensaje_whatsapp(turno)
-            mensaje_exito = "Reserva confirmada exitosamente. Se ha enviado un mensaje de WhatsApp con los detalles."
-            turnos = []  # Limpiamos los turnos después de confirmar la reserva
-            reserva_form = None
-    
+            if turno_id:
+                try:
+                    turno = Turno.objects.get(id=turno_id)
+                    turno.disponible = False
+                    turno.save()
+                    enviar_mensaje_whatsapp(turno)
+                    mensaje_exito = "Reserva confirmada exitosamente. Se ha enviado un mensaje de WhatsApp con los detalles."
+                    turnos = []  # Limpiamos los turnos después de confirmar la reserva
+                    reserva_form = None
+                except Turno.DoesNotExist:
+                    mensaje_error = "El turno seleccionado no existe."
+            else:
+                mensaje_error = "No se proporcionó un ID de turno válido para confirmar la reserva."
+        else:
+            return HttpResponseServerError('Acción no válida.')
+
     context = {
         'turnos': turnos,
         'fecha_seleccionada': fecha_seleccionada,
@@ -108,17 +122,24 @@ def crear_turnos_si_no_existen(fecha):
         )
 
 def enviar_mensaje_whatsapp(turno):
-    account_sid = 'your_twilio_account_sid'
-    auth_token = 'your_twilio_auth_token'
+    # Código para enviar mensaje por WhatsApp utilizando Twilio
+    # Asegúrate de tener configurada tu cuenta de Twilio y los créditos disponibles
+    account_sid = 'tu_account_sid'
+    auth_token = 'tu_auth_token'
     client = Client(account_sid, auth_token)
+    
+    mensaje = f"Se ha confirmado su reserva para el turno el {turno.fecha.strftime('%d-%m-%Y')} a las {turno.hora.strftime('%H:%M')}. Gracias."
+    
+    try:
+        message = client.messages.create(
+            body=mensaje,
+            from_='tu_numero_twilio',
+            to='+543534793366'  # Reemplaza con el número de teléfono al que deseas enviar el mensaje
+        )
+        print(f"Mensaje enviado correctamente a {message.to}. SID: {message.sid}")
+    except Exception as e:
+        print(f"Error al enviar mensaje por WhatsApp: {str(e)}")
 
-    message = client.messages.create(
-        body=f"¡Reserva confirmada! Se ha agendado un turno para el día {turno.fecha.strftime('%d-%m-%Y')} a las {turno.hora.strftime('%H:%M')}.",
-        from_='whatsapp:+14155238886',  # Twilio sandbox number
-        to='whatsapp:+543534793366'  # Tu número de WhatsApp
-    )
-
-    print(message.sid)  # opcional, para ver el SID del mensaje
 
 def crear_turno(request):
     if request.method == 'POST':

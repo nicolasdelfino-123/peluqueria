@@ -1,6 +1,7 @@
 from django import forms
 from .models import Turno
 
+#este estaría sin uso para mi
 class TurnoForm(forms.ModelForm):
     class Meta:
         model = Turno
@@ -15,5 +16,5 @@ class ReservaForm(forms.ModelForm):
             'apellido_cliente': 'Apellido',
             'telefono_cliente': 'Teléfono'
         }
-
+        turno_id = forms.IntegerField(widget=forms.HiddenInput())
 
