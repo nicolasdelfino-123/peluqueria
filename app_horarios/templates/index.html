@@ -176,14 +176,21 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <!-- Flatpickr JS -->
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <!-- Flatpickr Initialization -->
+    <!-- Flatpickr JS -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const datePicker = flatpickr('#datepicker', {
                 locale: 'es',
                 dateFormat: 'd-m-Y',
                 disableMobile: true,
-                minDate: 'today'
+                minDate: 'today',
+                disable: [
+                    function(date) {
+                        // return true to disable
+                        return (date.getDay() === 1); // Deshabilitar los lunes (día 1)
+                    }
+                ]
             });
 
             const mostrarHorariosBtn = document.getElementById('mostrarHorariosBtn');
