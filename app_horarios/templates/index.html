@@ -188,7 +188,7 @@
                 disable: [
                     function(date) {
                         // return true to disable
-                        return (date.getDay() === 1); // Deshabilitar los lunes (día 1)
+                        return (date.getDay() === 0 || date.getDay() === 1); // Deshabilitar los domingos (día 0) y lunes (día 1)
                     }
                 ]
             });
