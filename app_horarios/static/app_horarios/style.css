@@ -67,7 +67,10 @@ ul li {
 /*Estilos para Encabezados de Horarios Disponibles y Botones:*/
 
 .available-times-heading {
-    color: white;
+    background-color: rgba(0, 0, 0, 0.5); /* Fondo semitransparente */
+    padding: 10px;
+    border-radius: 5px;
+    backdrop-filter: blur(5px); /* Filtro de desenfoque */
 }
 
 .btn {
@@ -109,3 +112,43 @@ ul li {
     transform: scale(1.02); /* Efecto de escala al hacer hover */
 }
 
+/* Estilos específicos para los iconos de redes sociales */
+.instagram-icon, .facebook-icon {
+    display: inline-block;
+}
+
+.instagram-icon {
+    position: absolute;
+    left: 20px; /* Ajusta este valor para mover más a la izquierda */
+}
+
+.instagram-img {
+    width: 54px; /* Aumenta el tamaño del icono */
+    height: auto;
+}
+
+.facebook-icon {
+    position: absolute;
+    right: 20px; /* Ajusta este valor para mover más a la derecha */
+}
+
+.facebook-img {
+    width: 54px; /* Aumenta el tamaño del icono */
+    height: auto;
+}
+
+/* Estilo específico para centrar el texto */
+.footer .container .text-center {
+    text-align: center;
+    position: relative;
+    z-index: 1;
+}
+
+/* Ajustes para las columnas */
+.footer .row {
+    position: relative;
+}
+
+.footer .col-md-4 {
+    position: relative;
+}

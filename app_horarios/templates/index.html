@@ -128,6 +128,7 @@
                     </form>
                 {% elif turnos %}
                 <h2 class="available-times-heading"><strong>Horarios Disponibles para el día seleccionado:</strong></h2>
+
                     <div class="row mt-3">
                         {% for turno in turnos %}
                         <div class="col-12 col-md-4 mb-3">
@@ -150,25 +151,27 @@
     </main>
 
     <!-- Footer -->
+    <!-- Footer -->
     <footer class="footer mt-auto py-3 bg-dark text-white">
-        <div class="container text-center">
+        <div class="container">
             <div class="row">
-                <div class="col-md-4">
-                    <a href="https://www.instagram.com" target="_blank" class="text-white">
-                        <img src="https://img.icons8.com/fluent/48/000000/instagram-new.png" alt="Instagram" width="24">
+                <div class="col-md-4 position-relative">
+                    <a href="https://www.instagram.com" target="_blank" class="instagram-icon">
+                        <img src="https://img.icons8.com/fluent/48/000000/instagram-new.png" class="instagram-img" alt="Instagram">
                     </a>
                 </div>
-                <div class="col-md-4">
-                    <a href="https://www.facebook.com" target="_blank" class="text-white">
-                        <img src="https://img.icons8.com/fluent/48/000000/facebook-new.png" alt="Facebook" width="24">
-                    </a>
-                </div>
-                <div class="col-md-4">
+                <div class="col-md-4 text-center">
                     <p class="mb-0">&copy; 2024 Peluquería Ivan Belotti. Todos los derechos reservados.</p>
+                </div>
+                <div class="col-md-4 text-right">
+                    <a href="https://www.facebook.com" target="_blank" class="facebook-icon">
+                        <img src="https://img.icons8.com/fluent/48/000000/facebook-new.png" class="facebook-img" alt="Facebook">
+                    </a>
                 </div>
             </div>
         </div>
     </footer>
+
 
     <!-- jQuery y Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
