@@ -24,5 +24,6 @@ urlpatterns = [
     path('', app_views.index, name='index'),
     path('crear_turno/', app_views.crear_turno, name='crear_turno'),
     path('editar_turno/<int:turno_id>/', app_views.editar_turno, name='editar_turno'),
+    path('ver-turnos/', app_views.ver_turnos, name='ver_turnos'),
     # Otras URLs según sea necesario
 ]

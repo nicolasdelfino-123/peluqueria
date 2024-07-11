@@ -1,9 +1,11 @@
 from django.shortcuts import render, redirect
 from .models import Turno
 from .forms import TurnoForm, ReservaForm
-from datetime import datetime, time
+from datetime import datetime, time, timedelta
 from twilio.rest import Client
 from django.http import HttpResponseServerError
+from django.utils import timezone
+import calendar
 
 def index(request):
     turnos = []
@@ -161,3 +163,62 @@ def editar_turno(request, turno_id):
     else:
         form = TurnoForm(instance=turno)
     return render(request, 'editar_turno.html', {'form': form, 'turno': turno})
+
+
+
+
+
+
+
+# views.py
+
+def ver_turnos(request):
+    # Obtener mes y año actuales, o los que se pasen como parámetros
+    now = datetime.now()
+    month = int(request.GET.get('month', now.month))
+    year = int(request.GET.get('year', now.year))
+
+    # Calcular el primer y último día del mes
+    first_day_of_month = datetime(year, month, 1)
+    last_day_of_month = datetime(year, month, calendar.monthrange(year, month)[1])
+
+    # Calcular el primer día que se muestra en el calendario (martes)
+    first_day_of_week = first_day_of_month
+    while first_day_of_week.weekday() != 1:  # 1 es martes
+        first_day_of_week -= timedelta(days=1)
+
+    # Crear una lista de días vacíos hasta el primer día del mes
+    empty_days = []
+    current_day = first_day_of_week
+    while current_day < first_day_of_month:
+        empty_days.append({})
+        current_day += timedelta(days=1)
+
+    # Generar lista de días del mes con turnos (simulados)
+    calendar_days = []
+    for day in range(1, calendar.monthrange(year, month)[1] + 1):
+        current_day = datetime(year, month, day)
+        if current_day.weekday() in [1, 2, 3, 4, 5]:  # Martes a sábado
+            calendar_days.append({
+                'day': day,
+                'month': month,
+                'year': year,
+                'name': 'Nombre',
+                'surname': 'Apellido',
+                'phone': '123456789'
+            })
+
+    # Obtener el nombre del mes actual
+    current_month_name = first_day_of_month.strftime('%B')
+
+    context = {
+        'current_month': current_month_name,
+        'current_year': year,
+        'prev_month': (month - 1) if month > 1 else 12,
+        'prev_year': year - 1 if month == 1 else year,
+        'next_month': (month + 1) if month < 12 else 1,
+        'next_year': year + 1 if month == 12 else year,
+        'empty_days': empty_days,
+        'calendar_days': calendar_days,
+    }
+    return render(request, 'ver-turnos.html', context)
