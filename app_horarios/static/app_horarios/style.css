@@ -71,6 +71,7 @@ ul li {
     padding: 10px;
     border-radius: 5px;
     backdrop-filter: blur(5px); /* Filtro de desenfoque */
+    font-family: 'Oswald';
 }
 
 .btn {
@@ -151,4 +152,38 @@ ul li {
 
 .footer .col-md-4 {
     position: relative;
+}
+
+/* estilos nombre nav bar */
+
+.navbar-brand {
+    font-family: 'Oswald';
+    font-size: 30px;
+    color: #2b1ca2;
+    text-shadow: 10px 4px 4px rgba(0, 0, 0, 0.5);
+    margin-left: 20px;
+    font-style: italic;
+}
+
+.navbar-brand:hover {
+    color: #ffcc00;
+}
+
+/* Estilos del contenedor TURNOS */
+
+.turnos-container {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.turnos-heading {
+    font-family: "Oswald";
+    font-size: 2rem;
+    color: white;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: inline-block;
+    padding: 10px 100px;
+    border-radius: 10px;
+    font-weight: 800; /* Prueba con valores como 100, 200, 300, ..., 900 */
+    text-shadow: 10px 4px 4px rgba(0, 0, 0, 0.5);
 }
