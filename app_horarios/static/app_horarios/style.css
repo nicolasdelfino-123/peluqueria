@@ -98,6 +98,8 @@ ul li {
 
 #horariosContainer {
     margin-bottom: 20px;
+
+
 }
 
 .card {
@@ -187,3 +189,28 @@ ul li {
     font-weight: 800; /* Prueba con valores como 100, 200, 300, ..., 900 */
     text-shadow: 10px 4px 4px rgba(0, 0, 0, 0.5);
 }
+
+.reserva-form-container {
+    background-color: rgba(0, 0, 0, 0.6); /* Fondo negro con opacidad */
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(5px);
+    text-align: center; /* Centrar el contenido */
+}
+
+.reserva-form-container h2 {
+    color: white;
+    font-weight: bold;
+    margin-bottom: 20px; /* Espacio adicional bajo el título */
+}
+
+.reserva-form-container form label {
+    color: white;
+    font-weight: bold;
+}
+
+
+
+
