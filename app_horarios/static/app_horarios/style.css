@@ -25,6 +25,7 @@ header {
     color: #fff;
     padding: 10px 20px;
     text-align: center;
+    
 }
 
 header h1 {
@@ -214,3 +215,33 @@ ul li {
 
 
 
+#header-contact-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    text-align: right;
+}
+
+#header-contact-info .contact-item {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    width: 100%;
+    margin: 0;
+    padding: 2px 0;
+}
+
+#header-contact-info .contact-item .material-symbols-outlined {
+    margin-right: 8px;
+    font-size: 18px; /* Ajusta este valor según prefieras */
+}
+
+@media (max-width: 991px) {
+    #header-contact-info {
+        align-items: flex-start;
+    }
+
+    #header-contact-info .contact-item {
+        justify-content: flex-start;
+    }
+}

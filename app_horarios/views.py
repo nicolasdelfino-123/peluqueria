@@ -172,6 +172,8 @@ def editar_turno(request, turno_id):
 
 # views.py
 
+
+
 def ver_turnos(request):
     # Obtener mes y año actuales, o los que se pasen como parámetros
     now = datetime.now()
@@ -194,18 +196,21 @@ def ver_turnos(request):
         empty_days.append({})
         current_day += timedelta(days=1)
 
-    # Generar lista de días del mes con turnos (simulados)
+    # Generar lista de días del mes con turnos
     calendar_days = []
     for day in range(1, calendar.monthrange(year, month)[1] + 1):
         current_day = datetime(year, month, day)
         if current_day.weekday() in [1, 2, 3, 4, 5]:  # Martes a sábado
+            # Filtrar turnos por día y hora (mañana y tarde)
+            turnos_manana = Turno.objects.filter(fecha=current_day, hora__lt=datetime.strptime("12:00", "%H:%M"), disponible=True)
+            turnos_tarde = Turno.objects.filter(fecha=current_day, hora__gte=datetime.strptime("12:00", "%H:%M"), disponible=True)
+            
             calendar_days.append({
                 'day': day,
                 'month': month,
                 'year': year,
-                'name': 'Nombre',
-                'surname': 'Apellido',
-                'phone': '123456789'
+                'turnos_manana': turnos_manana,
+                'turnos_tarde': turnos_tarde,
             })
 
     # Obtener el nombre del mes actual

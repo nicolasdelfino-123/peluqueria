@@ -14,8 +14,9 @@
     <link rel="stylesheet" href="{% static 'app_horarios/style.css' %}">
     <!-- Flatpickr CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <!--ver si está de más porque creo que no está en uso-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-sb5A1I4TyRznxGAhS/8cZDvhNNLwgsxeY5yyzUQzBDO4t1QhbhvS7ys/IM1G46lUslMTW3Uv1FiqNzZ3xZN5Hg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
 
     <!-- Background image -->
     <style>
@@ -56,21 +57,21 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ml-auto">
-                    <li class="nav-item">
-                        <span class="navbar-text">
-                            <i class="fas fa-map-marker-alt"></i> Vélez Sarsfield 410 - Local 4
-                        </span>
-                    </li>
-                    <li class="nav-item">
-                        <span class="navbar-text">
-                            <i class="fas fa-phone"></i> 03533445566
-                        </span>
-                    </li>
-                </ul>
+                <div id="header-contact-info" class="navbar-nav ml-auto contact-info">
+                    <div class="contact-item address">
+                        <span class="material-symbols-outlined">location_on</span>
+                        Vélez Sarsfield 410 - Local 4
+                    </div>
+                    <div class="contact-item phone">
+                        <span class="material-symbols-outlined">phone</span>
+                        03533-445566
+                    </div>
+                </div>
             </div>
         </nav>
     </header>
+    
+    
     
 
     <!-- Turnos section -->
