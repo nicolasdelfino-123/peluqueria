@@ -60,19 +60,16 @@
                 <div id="header-contact-info" class="navbar-nav ml-auto contact-info">
                     <div class="contact-item address">
                         <span class="material-symbols-outlined">location_on</span>
-                        Vélez Sarsfield 410 - Local 4
+                        <a href="https://www.google.com/maps/search/?api=1&query=V%C3%A9lez%20Sarsfield%20410,%20Las%20Varillas,%20C%C3%B3rdoba" target="_blank" style="color: white;">Vélez Sarsfield 410 - Local 4 - Las Varillas, Córdoba</a>
                     </div>
                     <div class="contact-item phone">
                         <span class="material-symbols-outlined">phone</span>
-                        03533-445566
+                        <a href="https://wa.me/5493533488227" target="_blank" style="color: white;">03533-488227</a>
                     </div>
                 </div>
             </div>
         </nav>
     </header>
-    
-    
-    
 
     <!-- Turnos section -->
     <div class="turnos-container">
@@ -98,25 +95,15 @@
             </form>
 
             <!-- Mostrar mensajes de error o éxito -->
-            {% if mensaje_error %}
-                <div class="alert alert-warning mt-3" role="alert">
-                    {{ mensaje_error }}
+            {% if messages %}
+                <div class="alert alert-info mt-3" role="alert">
+                    {% for message in messages %}
+                        <div>{{ message }}</div>
+                    {% endfor %}
                 </div>
-            {% endif %}
-            {% if mensaje_exito %}
-                <div class="alert alert-success mt-3" role="alert">
-                    {{ mensaje_exito }}
-                </div>
-                <!-- Script para enviar mensaje de WhatsApp al número proporcionado -->
-                <script>
-                    const telefonoDestino = '+543534793366';
-                    const mensaje = encodeURIComponent('Su reserva de turno ha sido confirmada en Peluquería Iván Belotti.');
-                    const url = `https://api.whatsapp.com/send?phone=${telefonoDestino}&text=${mensaje}`;
-                    window.location.href = url;
-                </script>
             {% endif %}
 
-                        <!-- Mostrar horarios o formulario de reserva -->
+            <!-- Mostrar horarios o formulario de reserva -->
             <div id="horariosContainer" class="mt-4">
                 {% if reserva_form %}
                     <div class="reserva-form-container">
@@ -157,17 +144,17 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-4 position-relative">
-                    <a href="https://www.instagram.com" target="_blank" class="instagram-icon">
+                    <a href="https://www.instagram.com/ivanbellotti78/" target="_blank" class="instagram-icon">
                         <img src="https://img.icons8.com/fluent/48/000000/instagram-new.png" class="instagram-img" alt="Instagram">
                     </a>
                 </div>
                 <div class="col-md-4 position-relative">
-                    <a href="https://www.whatsapp.com" target="_blank" class="whatsapp-icon">
+                    <a href="https://wa.me/5493533488227" target="_blank" class="whatsapp-icon">
                         <img src="https://img.icons8.com/fluent/48/000000/whatsapp.png" class="whatsapp-img" alt="WhatsApp">
                     </a>
                 </div>
                 <div class="col-md-4 position-relative text-right">
-                    <a href="https://www.facebook.com" target="_blank" class="facebook-icon">
+                    <a href="https://www.facebook.com/ivan.bellotti.56" target="_blank" class="facebook-icon">
                         <img src="https://img.icons8.com/fluent/48/000000/facebook-new.png" class="facebook-img" alt="Facebook">
                     </a>
                 </div>
@@ -188,22 +175,23 @@
             const datePicker = flatpickr('#datepicker', {
                 locale: 'es', // Establecer idioma en español
                 dateFormat: 'd-m-Y',
-                disableMobile: true,
                 minDate: 'today',
                 disable: [
                     function(date) {
-                        // Retornar true para deshabilitar
-                        return (date.getDay() === 0 || date.getDay() === 1); // Deshabilitar domingos (día 0) y lunes (día 1)
+                        // Deshabilitar los lunes
+                        return date.getDay() === 1;
+                    },
+                    function(date) {
+                        // Deshabilitar los domingos
+                        return date.getDay() === 0;
                     }
-                ]
+                ],
+                // Puedes agregar otros ajustes aquí si es necesario
             });
-
-            const mostrarHorariosBtn = document.getElementById('mostrarHorariosBtn');
-            const horariosContainer = document.getElementById('horariosContainer');
-
-            // Limpiar horarios al cambiar la fecha
-            datePicker.config.onChange.push(function(selectedDates, dateStr, instance) {
-                horariosContainer.innerHTML = ''; // Limpiar contenido
+    
+            document.getElementById('mostrarHorariosBtn').addEventListener('click', function(event) {
+                event.preventDefault();
+                document.getElementById('horariosForm').submit();
             });
         });
     </script>

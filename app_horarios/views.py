@@ -7,97 +7,106 @@ from django.http import HttpResponseServerError
 from django.utils import timezone
 import calendar
 
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from .models import Turno
+from .forms import ReservaForm
+from datetime import datetime, time
+
 def index(request):
     turnos = []
     fecha_seleccionada = None
-    mensaje_error = None
-    mensaje_exito = None
+    turno_periodo = 'manana'  # Valor por defecto
     reserva_form = None
 
     if request.method == 'POST':
+        # Caso 1: Selección de fecha
         if 'fecha_seleccionada' in request.POST:
             fecha_seleccionada = request.POST.get('fecha_seleccionada')
             turno_periodo = request.POST.get('turno_periodo', 'manana')
-            
+
             if fecha_seleccionada:
                 try:
                     fecha = datetime.strptime(fecha_seleccionada, '%d-%m-%Y').date()
-                    
                     crear_turnos_si_no_existen(fecha)
                     
+                    # Filtramos turnos según el periodo seleccionado
                     if turno_periodo == 'manana':
-                        if fecha.weekday() < 5:  # Martes a Viernes
-                            turnos = Turno.objects.filter(
-                                fecha=fecha,
-                                hora__gte=time(8, 30),
-                                hora__lt=time(12, 0),
-                                disponible=True
-                            ).order_by('hora')
-                        elif fecha.weekday() == 5:  # Sábado
-                            turnos = Turno.objects.filter(
-                                fecha=fecha,
-                                hora__gte=time(8, 30),
-                                hora__lt=time(13, 0),
-                                disponible=True
-                            ).order_by('hora')
+                        turnos = Turno.objects.filter(
+                            fecha=fecha,
+                            hora__gte=time(8, 30),
+                            hora__lt=time(12, 0),
+                            disponible=True
+                        ).order_by('hora')
                     else:  # turno_periodo == 'tarde'
-                        if fecha.weekday() < 5:  # Martes a Viernes
-                            turnos = Turno.objects.filter(
-                                fecha=fecha,
-                                hora__gte=time(16, 0),
-                                hora__lt=time(21, 0),
-                                disponible=True
-                            ).order_by('hora')
-                        elif fecha.weekday() == 5:  # Sábado
-                            turnos = Turno.objects.filter(
-                                fecha=fecha,
-                                hora__gte=time(17, 30),
-                                hora__lt=time(20, 30),
-                                disponible=True
-                            ).order_by('hora')
+                        turnos = Turno.objects.filter(
+                            fecha=fecha,
+                            hora__gte=time(16, 0),
+                            hora__lt=time(21, 0),
+                            disponible=True
+                        ).order_by('hora')
                     
-                    if not turnos:
-                        mensaje_error = "No hay horarios disponibles para la fecha y periodo seleccionados."
+                    # Aquí no se necesita verificar si hay turnos disponibles, ya que asumimos que siempre hay opciones válidas
                 except ValueError:
-                    mensaje_error = "Formato de fecha inválido. Por favor, seleccione una fecha válida."
-            else:
-                mensaje_error = "Por favor, seleccione una fecha."
+                    messages.error(request, "Formato de fecha inválido. Por favor, seleccione una fecha válida.")
+                    return redirect('index')  # Redirige para evitar que se muestren datos incorrectos
+
+        # Caso 2: Selección de turno
         elif 'turno_id' in request.POST:
             turno_id = request.POST.get('turno_id')
+            fecha_seleccionada = request.POST.get('fecha_seleccionada', fecha_seleccionada)
+            turno_periodo = request.POST.get('turno_periodo', turno_periodo)
+            
             if turno_id:
                 try:
                     turno = Turno.objects.get(id=turno_id)
-                    reserva_form = ReservaForm(instance=turno)
+                    reserva_form = ReservaForm(
+                        initial={
+                            'turno_id': turno_id,
+                            'fecha_seleccionada': fecha_seleccionada,
+                            'turno_periodo': turno_periodo
+                        },
+                        instance=turno
+                    )
                 except Turno.DoesNotExist:
-                    mensaje_error = "El turno seleccionado no existe."
+                    messages.error(request, "El turno seleccionado no existe.")
             else:
-                mensaje_error = "No se proporcionó un ID de turno válido."
+                messages.error(request, "No se proporcionó un ID de turno válido.")
+
+        # Caso 3: Confirmar reserva
         elif 'confirmar_reserva' in request.POST:
             turno_id = request.POST.get('turno_id')
+            fecha_seleccionada = request.POST.get('fecha_seleccionada', fecha_seleccionada)
+            turno_periodo = request.POST.get('turno_periodo', turno_periodo)
+
             if turno_id:
                 try:
                     turno = Turno.objects.get(id=turno_id)
-                    turno.disponible = False
-                    turno.save()
-                    enviar_mensaje_whatsapp(turno)
-                    mensaje_exito = "Reserva confirmada exitosamente. Se ha enviado un mensaje de WhatsApp con los detalles."
-                    turnos = []  # Limpiamos los turnos después de confirmar la reserva
-                    reserva_form = None
+                    reserva_form = ReservaForm(request.POST, instance=turno)
+                    if reserva_form.is_valid():
+                        reserva = reserva_form.save(commit=False)
+                        reserva.disponible = False
+                        reserva.save()
+                        messages.success(request, "Gracias por su reserva. Su turno ha sido confirmado.")
+                        turnos = []  # Limpiamos los turnos después de confirmar la reserva
+                        reserva_form = None
+                    else:
+                        messages.error(request, "Hay errores en el formulario de reserva. Por favor, corrija y vuelva a intentarlo.")
                 except Turno.DoesNotExist:
-                    mensaje_error = "El turno seleccionado no existe."
+                    messages.error(request, "El turno seleccionado no existe.")
             else:
-                mensaje_error = "No se proporcionó un ID de turno válido para confirmar la reserva."
-        else:
-            return HttpResponseServerError('Acción no válida.')
+                messages.error(request, "No se proporcionó un ID de turno válido para confirmar la reserva.")
 
+    # Renderizar la página con el contexto
     context = {
         'turnos': turnos,
         'fecha_seleccionada': fecha_seleccionada,
-        'mensaje_error': mensaje_error,
-        'mensaje_exito': mensaje_exito,
+        'turno_periodo': turno_periodo,
         'reserva_form': reserva_form,
     }
     return render(request, 'index.html', context)
+
+
 
 def crear_turnos_si_no_existen(fecha):
     if fecha.weekday() < 5:  # Martes a Viernes
