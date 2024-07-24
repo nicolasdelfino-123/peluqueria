@@ -76,68 +76,72 @@
         <h1 class="turnos-heading">SELECCIONE SU TURNO</h1>
     </div>
 
-    <!-- Main content -->
-    <main class="flex-shrink-0">
-        <div class="container mt-5 mb-5">
-            <!-- Formulario para seleccionar fecha y periodo del turno -->
-            <form method="POST" id="horariosForm">
-                {% csrf_token %}
-                <input id="datepicker" type="text" class="form-control" name="fecha_seleccionada" placeholder="Selecciona una fecha" {% if fecha_seleccionada %}value="{{ fecha_seleccionada }}"{% endif %}>
-                <div class="form-group mt-3">
-                    <select name="turno_periodo" id="turno_periodo" class="form-control">
-                        <option value="manana">Mañana</option>
-                        <option value="tarde">Tarde</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <button type="submit" class="btn btn-primary mt-3" id="mostrarHorariosBtn">Mostrar Horarios</button>
-                </div>
-            </form>
+<!-- Main content -->
+<main class="flex-shrink-0">
+    <div class="container mt-5 mb-5">
+        <!-- Formulario para seleccionar fecha y periodo del turno -->
+        <form method="POST" id="horariosForm">
+            {% csrf_token %}
+            <input id="datepicker" type="text" class="form-control" name="fecha_seleccionada" placeholder="Selecciona una fecha" {% if fecha_seleccionada %}value="{{ fecha_seleccionada }}"{% endif %}>
+            <div class="form-group mt-3">
+                <select name="turno_periodo" id="turno_periodo" class="form-control">
+                    <option value="manana" {% if turno_periodo == "manana" %}selected{% endif %}>Mañana</option>
+                    <option value="tarde" {% if turno_periodo == "tarde" %}selected{% endif %}>Tarde</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary mt-3" name="mostrarHorariosBtn">Mostrar Horarios</button>
+            </div>
+        </form>
 
-            <!-- Mostrar mensajes de error o éxito -->
-            {% if messages %}
-                <div class="alert alert-info mt-3" role="alert">
-                    {% for message in messages %}
-                        <div>{{ message }}</div>
+        <!-- Mostrar mensajes de error o éxito -->
+        {% if messages %}
+            <div class="alert alert-info mt-3" role="alert">
+                {% for message in messages %}
+                    <div>{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <!-- Mostrar horarios o formulario de reserva -->
+        <div id="horariosContainer" class="mt-4">
+            {% if reserva_form %}
+                <div class="reserva-form-container">
+                    <h2>Reservar Turno</h2>
+                    <form method="POST">
+                        {% csrf_token %}
+                        {{ reserva_form.as_p }}
+                        <input type="hidden" name="turno_id" value="{{ reserva_form.instance.id }}">
+                        <input type="hidden" name="fecha_seleccionada" value="{{ fecha_seleccionada }}">
+                        <input type="hidden" name="turno_periodo" value="{{ turno_periodo }}">
+                        <button type="submit" class="btn btn-primary" name="confirmar_reserva">Confirmar Reserva</button>
+                    </form>
+                </div>
+            {% elif turnos %}
+                <h2 class="available-times-heading"><strong>Horarios Disponibles para el día seleccionado:</strong></h2>
+                <div class="row mt-3">
+                    {% for turno in turnos %}
+                        <div class="col-12 col-md-4 mb-3">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ turno.hora|time:"H:i" }}</h5>
+                                    <form method="POST">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="turno_id" value="{{ turno.id }}">
+                                        <input type="hidden" name="fecha_seleccionada" value="{{ fecha_seleccionada }}">
+                                        <input type="hidden" name="turno_periodo" value="{{ turno_periodo }}">
+                                        <button type="submit" class="btn btn-primary">Seleccionar</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
                     {% endfor %}
                 </div>
             {% endif %}
-
-            <!-- Mostrar horarios o formulario de reserva -->
-            <div id="horariosContainer" class="mt-4">
-                {% if reserva_form %}
-                    <div class="reserva-form-container">
-                        <h2>Reservar Turno</h2>
-                        <form method="POST">
-                            {% csrf_token %}
-                            {{ reserva_form.as_p }}
-                            <input type="hidden" name="turno_id" value="{{ reserva_form.instance.id }}">
-                            <button type="submit" class="btn btn-primary">Confirmar Reserva</button>
-                        </form>
-                    </div>
-                {% elif turnos %}
-                    <h2 class="available-times-heading"><strong>Horarios Disponibles para el día seleccionado:</strong></h2>
-                    <div class="row mt-3">
-                        {% for turno in turnos %}
-                            <div class="col-12 col-md-4 mb-3">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <h5 class="card-title">{{ turno.hora|time:"H:i" }}</h5>
-                                        <form method="POST">
-                                            {% csrf_token %}
-                                            <input type="hidden" name="turno_id" value="{{ turno.id }}">
-                                            <button type="submit" class="btn btn-primary">Seleccionar</button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        {% endfor %}
-                    </div>
-                {% endif %}
-            </div>
-
         </div>
-    </main>
+    </div>
+</main>
+
 
     <!-- Footer -->
     <footer class="footer mt-auto py-3 bg-dark text-white">

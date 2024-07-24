@@ -9,6 +9,7 @@ class TurnoForm(forms.ModelForm):
 from django import forms
 from .models import Turno
 
+
 class ReservaForm(forms.ModelForm):
     turno_id = forms.IntegerField(widget=forms.HiddenInput())
     fecha_seleccionada = forms.CharField(widget=forms.HiddenInput())
@@ -29,8 +30,11 @@ class ReservaForm(forms.ModelForm):
         turno_periodo = kwargs.pop('turno_periodo', None)
         super().__init__(*args, **kwargs)
         if turno_id:
+            print(f"Inicializando turno_id con: {turno_id}")
             self.fields['turno_id'].initial = turno_id
         if fecha_seleccionada:
+            print(f"Inicializando fecha_seleccionada con: {fecha_seleccionada}")
             self.fields['fecha_seleccionada'].initial = fecha_seleccionada
         if turno_periodo:
+            print(f"Inicializando turno_periodo con: {turno_periodo}")
             self.fields['turno_periodo'].initial = turno_periodo

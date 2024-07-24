@@ -6,31 +6,37 @@ from twilio.rest import Client
 from django.http import HttpResponseServerError
 from django.utils import timezone
 import calendar
+from django.contrib import messages
 
+
+from datetime import datetime, time
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from .models import Turno
 from .forms import ReservaForm
-from datetime import datetime, time
 
 def index(request):
+    print("Método de la solicitud:", request.method)
+    print("Contenido de request.POST:", request.POST)
     turnos = []
     fecha_seleccionada = None
     turno_periodo = 'manana'  # Valor por defecto
     reserva_form = None
 
     if request.method == 'POST':
+        print("Entrando en el bloque POST")
         # Caso 1: Selección de fecha
-        if 'fecha_seleccionada' in request.POST:
+        if 'mostrarHorariosBtn' in request.POST:
+            print("Caso 1: Selección de fecha")
             fecha_seleccionada = request.POST.get('fecha_seleccionada')
             turno_periodo = request.POST.get('turno_periodo', 'manana')
+            print(f"Fecha seleccionada: {fecha_seleccionada}, Turno periodo: {turno_periodo}")
 
             if fecha_seleccionada:
                 try:
                     fecha = datetime.strptime(fecha_seleccionada, '%d-%m-%Y').date()
                     crear_turnos_si_no_existen(fecha)
-                    
-                    # Filtramos turnos según el periodo seleccionado
+
                     if turno_periodo == 'manana':
                         turnos = Turno.objects.filter(
                             fecha=fecha,
@@ -45,59 +51,53 @@ def index(request):
                             hora__lt=time(21, 0),
                             disponible=True
                         ).order_by('hora')
-                    
-                    # Aquí no se necesita verificar si hay turnos disponibles, ya que asumimos que siempre hay opciones válidas
+                    print(f"Turnos encontrados: {turnos}")
+
                 except ValueError:
                     messages.error(request, "Formato de fecha inválido. Por favor, seleccione una fecha válida.")
-                    return redirect('index')  # Redirige para evitar que se muestren datos incorrectos
+                    return redirect('index')
 
-        # Caso 2: Selección de turno
+        # Caso 2 y 3: Selección de turno y Confirmación de reserva
         elif 'turno_id' in request.POST:
+            print("Caso 2 o 3: Selección de turno o Confirmación de reserva")
             turno_id = request.POST.get('turno_id')
             fecha_seleccionada = request.POST.get('fecha_seleccionada', fecha_seleccionada)
             turno_periodo = request.POST.get('turno_periodo', turno_periodo)
-            
-            if turno_id:
-                try:
-                    turno = Turno.objects.get(id=turno_id)
-                    reserva_form = ReservaForm(
-                        initial={
-                            'turno_id': turno_id,
-                            'fecha_seleccionada': fecha_seleccionada,
-                            'turno_periodo': turno_periodo
-                        },
-                        instance=turno
-                    )
-                except Turno.DoesNotExist:
-                    messages.error(request, "El turno seleccionado no existe.")
-            else:
-                messages.error(request, "No se proporcionó un ID de turno válido.")
-
-        # Caso 3: Confirmar reserva
-        elif 'confirmar_reserva' in request.POST:
-            turno_id = request.POST.get('turno_id')
-            fecha_seleccionada = request.POST.get('fecha_seleccionada', fecha_seleccionada)
-            turno_periodo = request.POST.get('turno_periodo', turno_periodo)
+            print(f"Turno ID seleccionado: {turno_id} para el periodo {turno_periodo} la fecha {fecha_seleccionada}")
 
             if turno_id:
                 try:
                     turno = Turno.objects.get(id=turno_id)
-                    reserva_form = ReservaForm(request.POST, instance=turno)
-                    if reserva_form.is_valid():
-                        reserva = reserva_form.save(commit=False)
-                        reserva.disponible = False
-                        reserva.save()
-                        messages.success(request, "Gracias por su reserva. Su turno ha sido confirmado.")
-                        turnos = []  # Limpiamos los turnos después de confirmar la reserva
-                        reserva_form = None
+                    
+                    # Si 'confirmar_reserva' está en POST, proceder con la confirmación
+                    if 'confirmar_reserva' in request.POST:
+                        print("Confirmando reserva")
+                        reserva_form = ReservaForm(request.POST, instance=turno)
+                        if reserva_form.is_valid():
+                            reserva = reserva_form.save(commit=False)
+                            reserva.disponible = False
+                            reserva.save()
+                            messages.success(request, "Gracias por su reserva. Su turno ha sido confirmado.")
+                            print("Reserva confirmada.")
+                            return redirect('index')
+                        else:
+                            messages.error(request, "Hay errores en el formulario de reserva. Por favor, corrija y vuelva a intentarlo.")
+                            print(f"Errores en el formulario de reserva: {reserva_form.errors}")
                     else:
-                        messages.error(request, "Hay errores en el formulario de reserva. Por favor, corrija y vuelva a intentarlo.")
+                        # Si no, solo mostrar el formulario de reserva
+                        reserva_form = ReservaForm(
+                            initial={
+                                'turno_id': turno_id,
+                                'fecha_seleccionada': fecha_seleccionada,
+                                'turno_periodo': turno_periodo
+                            },
+                            instance=turno
+                        )
+                        print(f"Formulario de reserva generado para el turno: {turno}")
+
                 except Turno.DoesNotExist:
                     messages.error(request, "El turno seleccionado no existe.")
-            else:
-                messages.error(request, "No se proporcionó un ID de turno válido para confirmar la reserva.")
 
-    # Renderizar la página con el contexto
     context = {
         'turnos': turnos,
         'fecha_seleccionada': fecha_seleccionada,
@@ -105,7 +105,6 @@ def index(request):
         'reserva_form': reserva_form,
     }
     return render(request, 'index.html', context)
-
 
 
 def crear_turnos_si_no_existen(fecha):
