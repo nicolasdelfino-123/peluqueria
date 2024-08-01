@@ -1,5 +1,17 @@
 /* Estilos grales de body y html */
 
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+*{
+    margin: 0px;
+    padding: 0px;
+}
+
 html, body {
     height: 100%;
 }
@@ -86,7 +98,7 @@ ul li {
 }
 
 .btn:hover {
-    background-color: #555;
+    background-color: #36564d;
 }
 
 .footer {
@@ -151,6 +163,7 @@ ul li {
 /* Ajustes para las columnas */
 .footer .row {
     position: relative;
+    
 }
 
 .footer .col-md-4 {
@@ -160,12 +173,14 @@ ul li {
 /* estilos nombre nav bar */
 
 .navbar-brand {
-    font-family: 'Oswald';
-    font-size: 30px;
+    font-family: 'Roboto';
+    font-size: clamp(18px, 4vw, 30px); /* Tamaño mínimo 18px, máximo 30px, ajusta según el viewport */
     color: #2b1ca2;
     text-shadow: 10px 4px 4px rgba(0, 0, 0, 0.5);
     margin-left: 20px;
     font-style: italic;
+    font-weight: 500;
+    
 }
 
 .navbar-brand:hover {
@@ -244,4 +259,10 @@ ul li {
     #header-contact-info .contact-item {
         justify-content: flex-start;
     }
+}
+
+
+.direccion{
+    font-family: "roboto";
+    font-weight: 600;
 }
