@@ -20,7 +20,7 @@ def index(request):
     print("Contenido de request.POST:", request.POST)
     turnos = []
     fecha_seleccionada = None
-    turno_periodo = 'manana'  # Valor por defecto
+    turno_periodo = ''  # Valor por defecto
     reserva_form = None
 
     if request.method == 'POST':
@@ -29,7 +29,7 @@ def index(request):
         if 'mostrarHorariosBtn' in request.POST:
             print("Caso 1: Selección de fecha")
             fecha_seleccionada = request.POST.get('fecha_seleccionada')
-            turno_periodo = request.POST.get('turno_periodo', 'manana')
+            turno_periodo = request.POST.get('turno_periodo', '')
             print(f"Fecha seleccionada: {fecha_seleccionada}, Turno periodo: {turno_periodo}")
 
             if fecha_seleccionada:

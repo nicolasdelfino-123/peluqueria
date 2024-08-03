@@ -87,6 +87,7 @@
             <input id="datepicker" type="text" class="form-control" name="fecha_seleccionada" placeholder="Selecciona una fecha" {% if fecha_seleccionada %}value="{{ fecha_seleccionada }}"{% endif %}>
             <div class="form-group mt-3">
                 <select name="turno_periodo" id="turno_periodo" class="form-control">
+                    <option class="placeholder1" value="" disabled selected>Seleccione Turno</option>
                     <option value="manana" {% if turno_periodo == "manana" %}selected{% endif %}>Mañana</option>
                     <option value="tarde" {% if turno_periodo == "tarde" %}selected{% endif %}>Tarde</option>
                 </select>

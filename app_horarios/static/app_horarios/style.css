@@ -266,3 +266,8 @@ ul li {
     font-family: "roboto";
     font-weight: 600;
 }
+
+.placeholder1{
+    color: #b3b3b3; /* Gris claro */
+    opacity: 1; /* Asegura que el color se aplique completamente */
+}
