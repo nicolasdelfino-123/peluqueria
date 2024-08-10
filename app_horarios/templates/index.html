@@ -19,6 +19,8 @@
     <!--ver si está de más porque creo que no está en uso-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-sb5A1I4TyRznxGAhS/8cZDvhNNLwgsxeY5yyzUQzBDO4t1QhbhvS7ys/IM1G46lUslMTW3Uv1FiqNzZ3xZN5Hg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <!--fabicon imagen en pestaña-->
+    <link rel="icon" href="{% static 'images/fondo_pelu_2.jpg' %}" type="image/x-icon">
 
     <!-- Background image -->
     <style>
@@ -87,7 +89,7 @@
             <input id="datepicker" type="text" class="form-control" name="fecha_seleccionada" placeholder="Selecciona una fecha" {% if fecha_seleccionada %}value="{{ fecha_seleccionada }}"{% endif %}>
             <div class="form-group mt-3">
                 <select name="turno_periodo" id="turno_periodo" class="form-control">
-                    <option class="placeholder1" value="" disabled selected>Seleccione Turno</option>
+                    <option class="placeholder1" value="" disabled selected hidden>Seleccione Turno</option>
                     <option value="manana" {% if turno_periodo == "manana" %}selected{% endif %}>Mañana</option>
                     <option value="tarde" {% if turno_periodo == "tarde" %}selected{% endif %}>Tarde</option>
                 </select>

@@ -271,3 +271,14 @@ ul li {
     color: #b3b3b3; /* Gris claro */
     opacity: 1; /* Asegura que el color se aplique completamente */
 }
+
+.form-control{
+    color: #564949; /* Gris claro */
+    opacity: 1; /* Asegura que el color se aplique completamente */
+}
+
+/* Estilo para el placeholder */
+#datepicker::placeholder {
+    color: #564949; /* Color gris claro */
+    opacity: 1; /* Asegura que el color se aplique completamente */
+}

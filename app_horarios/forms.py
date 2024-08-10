@@ -38,3 +38,4 @@ class ReservaForm(forms.ModelForm):
         if turno_periodo:
             print(f"Inicializando turno_periodo con: {turno_periodo}")
             self.fields['turno_periodo'].initial = turno_periodo
+
