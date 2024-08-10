@@ -85,6 +85,14 @@ ul li {
     border-radius: 5px;
     backdrop-filter: blur(5px); /* Filtro de desenfoque */
     font-family: 'Oswald';
+    transition: transform 0.3s ease; /* Transición suave */
+    perspective: 1000px; /* Añade perspectiva para darle un efecto 3D */
+}
+
+
+/* Efecto al pasar el mouse */
+.available-times-heading:hover {
+transform: rotateY(10deg); /* Rotación lateral al pasar el mouse */
 }
 
 .btn {
@@ -204,8 +212,13 @@ ul li {
     border-radius: 10px;
     font-weight: 800; /* Prueba con valores como 100, 200, 300, ..., 900 */
     text-shadow: 10px 4px 4px rgba(0, 0, 0, 0.5);
+    transition: transform 0.3s ease; /* Transición suave */
+    perspective: 1000px; /* Añade perspectiva para darle un efecto 3D */
 }
-
+/* Efecto al pasar el mouse */
+.turnos-heading:hover {
+    transform: rotateY(10deg); /* Rotación lateral al pasar el mouse */
+}
 .reserva-form-container {
     background-color: rgba(0, 0, 0, 0.6); /* Fondo negro con opacidad */
     padding: 15px;
