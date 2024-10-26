@@ -187,6 +187,7 @@ def ver_turnos(request):
     now = datetime.now()
     month = int(request.GET.get('month', now.month))
     year = int(request.GET.get('year', now.year))
+    print("inicio ver turnos")
 
     # Calcular el primer y último día del mes
     first_day_of_month = datetime(year, month, 1)
@@ -196,7 +197,7 @@ def ver_turnos(request):
     first_day_of_week = first_day_of_month
     while first_day_of_week.weekday() != 1:  # 1 es martes
         first_day_of_week -= timedelta(days=1)
-
+    print("bucle while muestra a partir del martes")
     # Crear una lista de días vacíos hasta el primer día del mes
     empty_days = []
     current_day = first_day_of_week
@@ -210,6 +211,7 @@ def ver_turnos(request):
         current_day = datetime(year, month, day)
         if current_day.weekday() in [1, 2, 3, 4, 5]:  # Martes a sábado
             # Filtrar turnos por día y hora (mañana y tarde)
+            print("filtrar turnos por dia y hora")
             turnos_manana = Turno.objects.filter(fecha=current_day, hora__lt=datetime.strptime("12:00", "%H:%M"), disponible=True)
             turnos_tarde = Turno.objects.filter(fecha=current_day, hora__gte=datetime.strptime("12:00", "%H:%M"), disponible=True)
             

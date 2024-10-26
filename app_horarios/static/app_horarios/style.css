@@ -277,7 +277,7 @@ transform: rotateY(10deg); /* Rotación lateral al pasar el mouse */
 
 .direccion{
     font-family: "roboto";
-    font-weight: 600;
+    font-weight: 500;
 }
 
 .placeholder1{
@@ -294,4 +294,8 @@ transform: rotateY(10deg); /* Rotación lateral al pasar el mouse */
 #datepicker::placeholder {
     color: #564949; /* Color gris claro */
     opacity: 1; /* Asegura que el color se aplique completamente */
+}
+
+.header-turnos {
+    margin-top: 40px;
 }
