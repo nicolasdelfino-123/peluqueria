@@ -106,6 +106,21 @@ def index(request):
     }
     return render(request, 'index.html', context)
 
+# En esta sección se define una matriz bidimensional que contiene los horarios disponibles de turnos,
+# organizada en filas y columnas según el día de la semana. La matriz cuenta con:
+# - Dos conjuntos de horarios principales, llamados `horarios_manana` y `horarios_tarde`, 
+#   que varían en función del día. 
+# - Cada fila en esta estructura representa un conjunto de horas (hh:mm) para la disponibilidad
+#   de turnos, por lo que las filas son las franjas horarias (mañana o tarde) 
+#   y las columnas representan horas específicas dentro de esas franjas.
+#
+# Ejemplo:
+# - Martes a viernes: `horarios_manana` tiene las horas [(8,30), (9,0), ..., (11,30)],
+#   y `horarios_tarde` cuenta con horas de [(16,0), (16,30), ..., (20,30)].
+# - Sábados: `horarios_manana` se extiende hasta las 12:30, y `horarios_tarde` hasta las 20:00.
+# - Domingo y lunes: no hay turnos, por lo que el código termina aquí.
+#
+# Esta estructura garantiza que se cubran los horarios disponibles según el día de la semana.
 
 def crear_turnos_si_no_existen(fecha):
     if fecha.weekday() < 5:  # Martes a Viernes
@@ -117,13 +132,14 @@ def crear_turnos_si_no_existen(fecha):
     else:  # Domingo y Lunes
         return
 
+    # Crear turnos para la mañana
     for hora, minuto in horarios_manana:
         Turno.objects.get_or_create(
             fecha=fecha,
             hora=time(hora, minuto),
             defaults={'disponible': True}
         )
-
+    # Crear turnos para la tarde
     for hora, minuto in horarios_tarde:
         Turno.objects.get_or_create(
             fecha=fecha,
