@@ -56,7 +56,12 @@
     <!-- Navbar -->
     <header>
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            <a class="navbar-brand" href="#">Aureliano Eichhorm Peluquería Salón Masculino</a>
+            <a class="navbar-brand" href="#">
+                <!-- Imagen del logo -->
+                <img src="{% static 'images/logo_aure.jpeg' %}" alt="Logo Maru Barber" class="d-inline-block align-top" style="width: 60px; height: auto; margin-right: 10px;">
+                <!-- Nombre del salón -->
+                Maru Barber Salón Masculino
+            </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -80,7 +85,7 @@
         <h1 class="turnos-heading">SELECCIONE SU TURNO</h1>
     </div>
 
-<!-- Main content -->
+<!-- Main content datepicker calendario-->
 <main class="flex-shrink-0">
     <div class="container mt-5 mb-5">
         <!-- Formulario para seleccionar fecha y periodo del turno -->
